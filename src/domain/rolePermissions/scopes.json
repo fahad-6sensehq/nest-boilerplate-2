@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Super Admin",
+    "permissions": [
+      "user.create",
+      "user.view",
+      "user.update",
+      "user.delete",
+      "user.me",
+
+      "project.create",
+      "project.update",
+      "project.view",
+      "project.delete"
+    ]
+  },
+  {
+    "name": "Admin",
+    "permissions": [
+      "user.view",
+      "user.update",
+      "user.me",
+
+      "project.update",
+      "project.view"
+    ]
+  },
+  {
+    "name": "User",
+    "permissions": [
+      "user.view",
+      "user.update",
+      "user.me",
+      
+      "project.view"
+    ]
+  }
+]
