@@ -6,6 +6,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     name: string;
 
+    @IsString()
     @IsValidEmail({ message: 'Invalid email' })
     email: string;
 

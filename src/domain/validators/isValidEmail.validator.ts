@@ -16,15 +16,13 @@ export function IsValidEmail(
             options: validationOptions,
             validator: {
                 async validate(value: any): Promise<boolean> {
-                    if (typeof value === 'string' && value.includes('@')) {
-                        const trimmedValue = value.trim();
-                        if (trimmedValue.length === 0) {
-                            return false;
-                        }
+                    if (!value.includes('@')) {
+                        return false;
                     }
 
                     return true;
                 },
+
                 defaultMessage(args: ValidationArguments): string {
                     return `${args.property} is not a valid email address`;
                 },
