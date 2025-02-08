@@ -1,33 +1,35 @@
-// import { AuthHelper } from './auth.helper';
-
 export class NestHelper {
     private static instance: NestHelper;
-    // constructor() {}
 
     static getInstance(): NestHelper {
         NestHelper.instance = NestHelper.instance || new NestHelper();
         return NestHelper.instance;
     }
 
-    async asyncForEach<T>(array: Array<T>, callback: (item: T, index: number, array: Array<T>) => void): Promise<void> {
+    async asyncForEach<T>(array: Array<T>,
+        callback: (item: T, index: number, array: Array<T>) => void
+    ): Promise<void> {
         for (let index = 0; index < array.length; index++) {
-            // eslint-disable-next-line
             await callback(array[index], index, array);
         }
     }
 
-    async isNumberAndNotEmpty(value: unknown): Promise<boolean> {
-        // Check if the value is a number and not NaN
+    async asyncForEachParallel<T>(
+        array: Array<T>,
+        callback: (item: T, index: number, array: Array<T>) => Promise<void>
+    ): Promise<void> {
+        await Promise.all(array.map((item, index) => callback(item, index, array)));
+    }
+
+
+    isNumberAndNotEmpty(value: unknown): boolean {
         if (typeof value === 'number' && !isNaN(value)) {
-            // Check if the value is not empty (undefined or null)
             return value !== null && value !== undefined;
         }
-
         return false;
     }
 
-    async isNumber(value: unknown): Promise<boolean> {
-        // Check if the value is a number and not NaN
+    isNumber(value: unknown): boolean {
         return typeof value === 'number' && !isNaN(value);
     }
 
