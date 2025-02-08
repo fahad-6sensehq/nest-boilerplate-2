@@ -7,12 +7,14 @@ import { RolePermissionModule } from './infrastructure/modules/role-permission.m
 import { RoleModule } from './infrastructure/modules/role.module';
 import { UserRoleModule } from './infrastructure/modules/user-role.module';
 import { UserModule } from './infrastructure/modules/user.module';
+import { AuthModule } from './infrastructure/modules/auth.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
         }),
+        AuthModule,
         DbModule,
         UserModule,
         ClientModule,
@@ -25,4 +27,4 @@ import { UserModule } from './infrastructure/modules/user.module';
     controllers: [],
     providers: [],
 })
-export class AppModule {}
+export class AppModule { }

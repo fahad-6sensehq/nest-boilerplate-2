@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { CreateUserDto } from 'src/application/dtos/createUser.dto';
+import { CreateUserDto } from 'src/application/dtos/create-user.dto';
 
 export class ConstructObjectFromDto {
     static constructCreateUserObject(user: CreateUserDto) {
@@ -8,8 +8,8 @@ export class ConstructObjectFromDto {
             email: user.email,
             password: user.password,
             role: user.role,
-            created_by: new Types.ObjectId('67a5e8fa4467af8e733dec2a'),
-            clientId: new Types.ObjectId('67a5e5444467af8e733deb9a'),
+            created_by: new Types.ObjectId('67a78165d5201ab4c8c13206'),
+            clientId: new Types.ObjectId('67a78165d5201ab4c8c13206'),
         };
     }
 }

@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
-import { CreateUserDto } from '../../application/dtos/createUser.dto';
+import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { RoleService } from '../../domain/services/role.service';
 import { User, UserDocument } from '../entities/user.entity';
 import { ConstructObjectFromDto } from '../instances/constructObjectFromDTO';
@@ -15,7 +15,7 @@ export class UserService {
         private readonly userModel: Model<UserDocument>,
         private readonly userRoleService: UserRoleService,
         private readonly roleService: RoleService,
-    ) {}
+    ) { }
 
     async create(body: CreateUserDto) {
         const userExists = await this.userModel.findOne({ email: body.email }).lean();
@@ -109,5 +109,9 @@ export class UserService {
 
     async find(id: string) {
         return await this.findOneData(id);
+    }
+
+    async findByEmail(email: string) {
+        return await this.userModel.findOne({ email }).lean().exec();
     }
 }
