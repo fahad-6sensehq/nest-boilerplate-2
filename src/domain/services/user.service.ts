@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
@@ -7,6 +7,8 @@ import { User, UserDocument } from '../entities/user.entity';
 import { ConstructObjectFromDto } from '../instances/constructObjectFromDTO';
 import { ExceptionHelper } from '../instances/ExceptionHelper';
 import { UserRoleService } from './user-role.service';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Timer } from '../constants/timer.constants';
 
 @Injectable()
 export class UserService {
@@ -15,6 +17,8 @@ export class UserService {
         private readonly userModel: Model<UserDocument>,
         private readonly userRoleService: UserRoleService,
         private readonly roleService: RoleService,
+        @Inject(CACHE_MANAGER)
+        private readonly cache: Cache,
     ) { }
 
     async create(body: CreateUserDto) {
@@ -99,10 +103,13 @@ export class UserService {
         const res = await this.userModel.aggregate(aggregate).exec();
         if (!res.length) return null;
 
+        let scopes = res[0].permissions.map((permission) => permission.name);
+
         const { userRole, permissions, ...userInfo } = res[0];
 
         return {
             ...userInfo,
+            scopes: [...scopes],
             permissions: permissions || [],
         };
     }

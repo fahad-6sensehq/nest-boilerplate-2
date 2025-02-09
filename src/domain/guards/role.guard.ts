@@ -1,17 +1,21 @@
-import { CanActivate, ExecutionContext, ForbiddenException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, HttpStatus, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { appConfig } from "src/infrastructure/config/app.config";
 import { ExceptionHelper } from "../instances/ExceptionHelper";
 import { NestHelper } from "../instances/NestHelper";
 import { UserService } from "../services/user.service";
+import { CACHE_MANAGER, Cache } from "@nestjs/cache-manager";
+import { Timer } from "../constants/timer.constants";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
         private jwt: JwtService,
-        private userService: UserService
+        private userService: UserService,
+        @Inject(CACHE_MANAGER)
+        private readonly cache: Cache,
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -37,10 +41,23 @@ export class RolesGuard implements CanActivate {
         if (NestHelper.getInstance().isEmpty(payload)) {
             throw new UnauthorizedException();
         }
-        const user = await this.userService.find(payload?.userId);
+
+        const key = `global:user:${payload.userId}`;
+        const cachedUser = await this.cache.get(key);
+        let user;
+
+        if (cachedUser) {
+            console.log('from cache');
+            user = cachedUser;
+        } else {
+            user = await this.userService.find(payload?.userId);
+            await this.cache.set(key, user, Timer.DAY);
+        }
+
         if (!user) {
             return false;
         }
+
         const userPermissions = user?.permissions.map((e) => {
             return e.name;
         });

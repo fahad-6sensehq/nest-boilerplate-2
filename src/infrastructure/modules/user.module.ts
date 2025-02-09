@@ -16,4 +16,4 @@ import { RoleModule } from './role.module';
     providers: [UserService],
     exports: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

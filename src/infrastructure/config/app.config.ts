@@ -8,6 +8,8 @@ export interface IConfig {
     serverType: string;
     dbQuery: string;
     jwtSecret: string;
+    redisHost: string;
+    redisPort: number;
 }
 
 const getAppConfig = (): IConfig => {
@@ -17,6 +19,8 @@ const getAppConfig = (): IConfig => {
     const serverType = process.env.SERVER_TYPE || '';
     const dbQuery = process.env.DB_QUERY || '';
     const jwtSecret = process.env.JWT_SECRET || '';
+    const redisHost = process.env.REDIS_HOST || '';
+    const redisPort = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
 
     if (!port) console.log('port must be specified');
     if (!mongodbURL) console.log('mongodbURL must be specified');
@@ -24,6 +28,8 @@ const getAppConfig = (): IConfig => {
     if (!serverType) console.log('serverType must be specified');
     if (!dbQuery) console.log('dbQuery must be specified');
     if (!jwtSecret) console.log('jwtSecret must be specified');
+    if (!redisHost) console.log('redisHost must be specified');
+    if (!redisPort) console.log('redisPort must be specified');
 
     return {
         port,
@@ -32,6 +38,8 @@ const getAppConfig = (): IConfig => {
         serverType,
         dbQuery,
         jwtSecret,
+        redisHost,
+        redisPort,
     };
 };
 export const appConfig = getAppConfig();
