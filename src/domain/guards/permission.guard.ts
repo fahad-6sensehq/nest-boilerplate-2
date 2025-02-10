@@ -1,19 +1,14 @@
-import { Timer } from '@constant/timer.constants';
-import { ExceptionHelper } from '@instance/ExceptionHelper';
 import { NestHelper } from '@instance/NestHelper';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import {
     CanActivate,
     ExecutionContext,
     ForbiddenException,
-    HttpStatus,
-    Inject,
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '@service/user.service';
+import { CacheService } from '@service/cache.service';
 import { appConfig } from 'infrastructure/config/app.config';
 
 @Injectable()
@@ -21,9 +16,7 @@ export class PermissionGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
         private jwt: JwtService,
-        private userService: UserService,
-        @Inject(CACHE_MANAGER)
-        private readonly cache: Cache,
+        private readonly cacheService: CacheService,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -41,49 +34,41 @@ export class PermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const token = au.split('Bearer ');
-        try {
-            this.jwt.verify(token[1], { secret: appConfig.jwtSecret });
-        } catch (err) {
-            ExceptionHelper.getInstance().defaultError(
-                'Unauthorized',
-                'unauthorized',
-                HttpStatus.UNAUTHORIZED,
-            );
+        if (!au || !au.startsWith('Bearer ')) {
+            throw new UnauthorizedException();
         }
 
-        const payload: any = this.jwt.decode(token[1]);
+        const tokenParts = au.split(' ');
+        if (tokenParts.length !== 2) {
+            throw new UnauthorizedException();
+        }
+
+        const token = tokenParts[1];
+
+        try {
+            this.jwt.verify(token, { secret: appConfig.jwtSecret });
+        } catch (err) {
+            throw new UnauthorizedException('Invalid token');
+        }
+
+        const payload: any = this.jwt.decode(token);
         if (NestHelper.getInstance().isEmpty(payload)) {
             throw new UnauthorizedException();
         }
 
-        const key = `global:user:${payload.userId}`;
-        const cachedUser = await this.cache.get(key);
-        let user;
-
-        if (cachedUser) {
-            console.log('from decorator cache');
-            user = cachedUser;
-        } else {
-            user = await this.userService.find(payload?.userId);
-            await this.cache.set(key, user, Timer.DAY);
-        }
+        const user = await this.cacheService.getGlobalCache(payload.userId);
 
         if (!user) {
             return false;
         }
 
-        const userPermissions = user?.permissions.map((e) => {
-            return e.name;
-        });
-
-        const inScopes = permissions.some((elem) => {
-            return userPermissions.includes(elem);
-        });
+        const userPermissions = new Set(user?.permissions.map((e) => e.name));
+        const inScopes = permissions.some((perm) => userPermissions.has(perm));
 
         if (!inScopes) {
             throw new ForbiddenException();
         }
+
         return true;
     }
 }
