@@ -1,5 +1,5 @@
+import { IsValidEmail } from '@validator/isValidEmail.validator';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { IsValidEmail } from 'src/domain/validators/isValidEmail.validator';
 
 export class CreateUserDto {
     @IsString()

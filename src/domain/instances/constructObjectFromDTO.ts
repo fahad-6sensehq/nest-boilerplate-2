@@ -1,5 +1,5 @@
+import { CreateUserDto } from '@dto/create-user.dto';
 import { Types } from 'mongoose';
-import { CreateUserDto } from 'src/application/dtos/create-user.dto';
 
 export class ConstructObjectFromDto {
     static constructCreateUserObject(user: CreateUserDto) {

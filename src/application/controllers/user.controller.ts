@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserService } from 'src/domain/services/user.service';
+import { CreateUserDto } from '@dto/create-user.dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { UserService } from '@service/user.service';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService,
+    constructor(
+        private readonly userService: UserService,
         // @Inject(CACHE_MANAGER)
         // private readonly cache: Cache
-    ) { }
+    ) {}
 
     @Post()
     async create(@Body() body: CreateUserDto) {

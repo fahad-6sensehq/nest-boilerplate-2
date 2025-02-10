@@ -1,11 +1,11 @@
+import { CreateRoleDto } from '@dto/create-role.dto';
+import { UpdateRoleDto } from '@dto/update-role.dto';
+import { Role, RoleDocument } from '@entity/role.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Role, RoleDocument } from '../entities/role.entity';
 import { PermissionService } from './permission.service';
 import { RolePermissionService } from './role-permission.service';
-import { CreateRoleDto } from 'src/application/dtos/create-role.dto';
-import { UpdateRoleDto } from 'src/application/dtos/update-role.dto';
 
 @Injectable()
 export class RoleService {

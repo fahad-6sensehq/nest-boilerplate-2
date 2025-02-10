@@ -1,10 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { appConfig } from 'src/infrastructure/config/app.config';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserService } from '../services/user.service';
+import { Timer } from '@constant/timer.constants';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Timer } from '../constants/timer.constants';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { UserService } from '@service/user.service';
+import { appConfig } from 'infrastructure/config/app.config';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -25,7 +25,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
         let user;
 
         if (cachedUser) {
-            console.log('from cache 2');
+            console.log('from jwt cache');
             user = cachedUser;
         } else {
             user = await this.userService.find(payload.userId);

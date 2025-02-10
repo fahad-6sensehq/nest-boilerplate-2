@@ -1,16 +1,14 @@
+import { GetUser } from '@decorator/getUser.decorator';
+import { RequirePermissions } from '@decorator/require-permission.decorator';
+import { ClientCredentialsGuard } from '@guard/clientAuthentication.guard';
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthService } from 'src/domain/services/auth.service';
-import { ClientCredentialsGuard } from 'src/domain/guards/clientAuthentication.guard';
-import { Request, Response } from 'express';
-import { RequirePermissions } from 'src/domain/decorators/require-permission.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/domain/decorators/getUser.decorator';
+import { AuthService } from '@service/auth.service';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService
-    ) { }
+    constructor(private readonly authService: AuthService) {}
 
     @Post('login')
     @UseGuards(ClientCredentialsGuard)

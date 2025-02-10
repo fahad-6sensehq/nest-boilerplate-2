@@ -1,17 +1,16 @@
+import { createKeyv } from '@keyv/redis';
+import { AuthModule } from '@module/auth.module';
+import { ClientModule } from '@module/client.module';
+import { PermissionModule } from '@module/permission.module';
+import { RolePermissionModule } from '@module/role-permission.module';
+import { RoleModule } from '@module/role.module';
+import { UserRoleModule } from '@module/user-role.module';
+import { UserModule } from '@module/user.module';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DbModule } from './infrastructure/config/db.config.module';
-import { ClientModule } from './infrastructure/modules/client.module';
-import { PermissionModule } from './infrastructure/modules/permission.module';
-import { RolePermissionModule } from './infrastructure/modules/role-permission.module';
-import { RoleModule } from './infrastructure/modules/role.module';
-import { UserRoleModule } from './infrastructure/modules/user-role.module';
-import { UserModule } from './infrastructure/modules/user.module';
-import { AuthModule } from './infrastructure/modules/auth.module';
-import { createKeyv } from '@keyv/redis';
-import { CacheModule } from '@nestjs/cache-manager';
-import { appConfig } from './infrastructure/config/app.config';
-
+import { appConfig } from 'infrastructure/config/app.config';
+import { DbModule } from 'infrastructure/config/db.config.module';
 
 @Module({
     imports: [
@@ -23,7 +22,9 @@ import { appConfig } from './infrastructure/config/app.config';
             useFactory: async () => {
                 return {
                     stores: [
-                        createKeyv(`redis://${appConfig.redisHost}:${appConfig.redisPort}`),
+                        createKeyv(
+                            `redis://${appConfig.redisHost}:${appConfig.redisPort}`,
+                        ),
                     ],
                 };
             },
@@ -40,4 +41,4 @@ import { appConfig } from './infrastructure/config/app.config';
     controllers: [],
     providers: [],
 })
-export class AppModule { }
+export class AppModule {}

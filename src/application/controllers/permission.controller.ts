@@ -1,3 +1,5 @@
+import { CreatePermissionDto } from '@dto/create-permission.dto';
+import { UpdatePermissionDto } from '@dto/update-permission.dto';
 import {
     Body,
     Controller,
@@ -7,9 +9,7 @@ import {
     Patch,
     Post,
 } from '@nestjs/common';
-import { PermissionService } from 'src/domain/services/permission.service';
-import { CreatePermissionDto } from '../dtos/create-permission.dto';
-import { UpdatePermissionDto } from '../dtos/update-permission.dto';
+import { PermissionService } from '@service/permission.service';
 
 @Controller('permission')
 export class PermissionController {

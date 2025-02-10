@@ -1,10 +1,10 @@
+import { CreateClientDto } from '@dto/create-client.dto';
 import { Body, Controller, Post } from '@nestjs/common';
-import { ClientService } from 'src/domain/services/client.service';
-import { CreateClientDto } from '../dtos/create-client.dto';
+import { ClientService } from '@service/client.service';
 
 @Controller('client')
 export class ClientController {
-    constructor(private readonly clientService: ClientService) { }
+    constructor(private readonly clientService: ClientService) {}
 
     @Post()
     async createClient(@Body() client: CreateClientDto) {

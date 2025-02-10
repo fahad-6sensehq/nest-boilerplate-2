@@ -1,9 +1,9 @@
+import { ClientController } from '@controller/client.controller';
+import { Client, ClientSchema } from '@entity/client.entity';
+import { RoleModule } from '@module/role.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ClientController } from 'src/application/controller/client.controller';
-import { Client, ClientSchema } from 'src/domain/entities/client.entity';
-import { ClientService } from 'src/domain/services/client.service';
-import { RoleModule } from './role.module';
+import { ClientService } from '@service/client.service';
 
 @Module({
     imports: [

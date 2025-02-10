@@ -1,3 +1,5 @@
+import { CreateUserRoleDto } from '@dto/create-user-role.dto';
+import { UpdateUserRoleDto } from '@dto/update-user-role.dto';
 import {
     Body,
     Controller,
@@ -7,9 +9,7 @@ import {
     Patch,
     Post,
 } from '@nestjs/common';
-import { UserRoleService } from '../../domain/services/user-role.service';
-import { CreateUserRoleDto } from '../dtos/create-user-role.dto';
-import { UpdateUserRoleDto } from '../dtos/update-user-role.dto';
+import { UserRoleService } from '@service/user-role.service';
 
 @Controller('user-role')
 export class UserRoleController {

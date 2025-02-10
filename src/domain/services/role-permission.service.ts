@@ -1,21 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { CreateRolePermissionDto } from '@dto/create-role-permission.dto';
+import { UpdateRolePermissionDto } from '@dto/update-role-permission.dto';
 import {
     RolePermission,
     RolePermissionDocument,
-} from '../entities/role-permission.entity';
-import { CreateRolePermissionDto } from 'src/application/dtos/create-role-permission.dto';
-import { UpdateRolePermissionDto } from 'src/application/dtos/update-role-permission.dto';
+} from '@entity/role-permission.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class RolePermissionService {
     constructor(
         @InjectModel(RolePermission.name)
         private readonly rolePermissionModel: Model<RolePermissionDocument>,
-        // private readonly rolePermissionModel: Model<RolePermissionDocument>,
-        // private readonly roleService: RoleService,
-        // private readonly permissionService: PermissionService
     ) {}
 
     async create(createRolePermissionDto: CreateRolePermissionDto) {

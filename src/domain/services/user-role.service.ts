@@ -1,9 +1,9 @@
+import { CreateUserRoleDto } from '@dto/create-user-role.dto';
+import { UpdateUserRoleDto } from '@dto/update-user-role.dto';
+import { UserRole, UserRoleDocument } from '@entity/user-role.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserRoleDto } from 'src/application/dtos/create-user-role.dto';
-import { UpdateUserRoleDto } from 'src/application/dtos/update-user-role.dto';
-import { UserRole, UserRoleDocument } from '../entities/user-role.entity';
 
 @Injectable()
 export class UserRoleService {

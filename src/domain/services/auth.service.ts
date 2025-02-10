@@ -1,17 +1,16 @@
+import { LoginDto } from '@dto/login.dto';
 import { Injectable } from '@nestjs/common';
-import { UserService } from './user.service';
-import { LoginDto } from 'src/application/dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { appConfig } from 'src/infrastructure/config/app.config';
 import { Request, Response } from 'express';
-import { access } from 'fs';
+import { appConfig } from 'infrastructure/config/app.config';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
-    ) { }
+    ) {}
 
     async login(req: Request, res: Response): Promise<Response> {
         const loginDto = req.body as LoginDto;
@@ -21,13 +20,18 @@ export class AuthService {
         }
 
         if (user.password !== loginDto.password) {
-            return res.json({ response: 'Password didn\'t match' });
+            return res.json({ response: "Password didn't match" });
         }
 
-        const userWithPermission = await this.userService.find(user._id.toString());
-        const scopes = userWithPermission.permissions.map((permission) => permission.name);
+        const userWithPermission = await this.userService.find(
+            user._id.toString(),
+        );
+        const scopes = userWithPermission.permissions.map(
+            (permission) => permission.name,
+        );
 
-        const { accessToken, refreshToken } = await this.generateToken(userWithPermission);
+        const { accessToken, refreshToken } =
+            await this.generateToken(userWithPermission);
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
@@ -44,11 +48,14 @@ export class AuthService {
         });
 
         return res.json({
-            ...user, scopes: [...scopes],
+            ...user,
+            scopes: [...scopes],
         });
     }
 
-    async generateToken(user): Promise<{ accessToken: string; refreshToken: string }> {
+    async generateToken(
+        user,
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.sign(
                 {
@@ -57,7 +64,7 @@ export class AuthService {
                 {
                     secret: appConfig.jwtSecret,
                     expiresIn: 3600,
-                }
+                },
             ),
             this.jwtService.sign(
                 {
@@ -66,7 +73,7 @@ export class AuthService {
                 {
                     secret: appConfig.jwtSecret,
                     expiresIn: 3600 * 24 * 7,
-                }
+                },
             ),
         ]);
 

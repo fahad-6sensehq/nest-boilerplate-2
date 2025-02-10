@@ -1,14 +1,13 @@
+import { CreateUserDto } from '@dto/create-user.dto';
+import { User, UserDocument } from '@entity/user.entity';
+import { ConstructObjectFromDto } from '@instance/constructObjectFromDTO';
+import { ExceptionHelper } from '@instance/ExceptionHelper';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
-import { CreateUserDto } from '../../application/dtos/create-user.dto';
-import { RoleService } from '../../domain/services/role.service';
-import { User, UserDocument } from '../entities/user.entity';
-import { ConstructObjectFromDto } from '../instances/constructObjectFromDTO';
-import { ExceptionHelper } from '../instances/ExceptionHelper';
+import { RoleService } from './role.service';
 import { UserRoleService } from './user-role.service';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Timer } from '../constants/timer.constants';
 
 @Injectable()
 export class UserService {
@@ -19,10 +18,12 @@ export class UserService {
         private readonly roleService: RoleService,
         @Inject(CACHE_MANAGER)
         private readonly cache: Cache,
-    ) { }
+    ) {}
 
     async create(body: CreateUserDto) {
-        const userExists = await this.userModel.findOne({ email: body.email }).lean();
+        const userExists = await this.userModel
+            .findOne({ email: body.email })
+            .lean();
         if (userExists) {
             return ExceptionHelper.getInstance().defaultError(
                 'User already exists',

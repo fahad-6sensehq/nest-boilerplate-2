@@ -1,8 +1,8 @@
+import { UserRoleController } from '@controller/user-role.controller';
+import { UserRoleSchema } from '@entity/user-role.entity';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserRoleController } from 'src/application/controller/user-role.controller';
-import { UserRoleSchema } from 'src/domain/entities/user-role.entity';
-import { UserRoleService } from 'src/domain/services/user-role.service';
+import { UserRoleService } from '@service/user-role.service';
 
 @Module({
     imports: [

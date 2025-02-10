@@ -1,14 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { appConfig } from 'src/infrastructure/config/app.config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserService } from '../services/user.service';
+import { UserService } from '@service/user.service';
+import { appConfig } from 'infrastructure/config/app.config';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-    constructor(
-        private readonly userService: UserService,
-    ) {
+export class AccessTokenStrategy extends PassportStrategy(
+    Strategy,
+    'jwt-refresh',
+) {
+    constructor(private readonly userService: UserService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
